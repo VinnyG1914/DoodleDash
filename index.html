@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="theme-color" content="#2a1160">
+<title>Doodle Dash</title>
+<link rel="preload" href="fonts/montserrat.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="backdrop"></div>
+
+<!-- Home -->
+<section class="screen center-screen" id="scr-home">
+  <div class="home">
+    <div class="brand">
+      <div class="brand-mark">✏️</div>
+      <div class="logo xl">Doodle<span>Dash</span></div>
+      <div class="tagline">Draw it. Guess it. Win it.</div>
+    </div>
+    <div id="resume-box" class="card resume" hidden></div>
+    <div class="home-actions">
+      <button class="go big" id="btn-create">🎨 Create game</button>
+      <button class="primary big" id="btn-join">🔑 Join game</button>
+    </div>
+    <div class="how glass">
+      <div><b>1</b> One person creates a game and shares the PIN.</div>
+      <div><b>2</b> Everyone takes turns drawing a secret word.</div>
+      <div><b>3</b> Guess fast in the chat to score more points.</div>
+    </div>
+  </div>
+  <button class="ghost small mute" id="btn-mute" title="Sound on/off">🔊</button>
+</section>
+
+<!-- PIN -->
+<section class="screen center-screen" id="scr-pin" hidden>
+  <div class="card panel narrow">
+    <button class="back" data-go="home">← Back</button>
+    <h2>Join a game</h2>
+    <div class="lbl">Game PIN</div>
+    <input type="text" id="in-pin" class="pin-input" inputmode="numeric" maxlength="6" placeholder="123456" autocomplete="off">
+    <div class="err" id="pin-err"></div>
+    <button class="go big wide" id="btn-pin">Next</button>
+  </div>
+</section>
+
+<!-- Profile -->
+<section class="screen center-screen" id="scr-profile" hidden>
+  <div class="card panel">
+    <button class="back" id="prof-back">← Back</button>
+    <div class="prof-top">
+      <div id="prof-preview"></div>
+      <div class="prof-name">
+        <div class="lbl" id="prof-pin-lbl"></div>
+        <div class="lbl">Your nickname</div>
+        <input type="text" id="in-name" maxlength="14" placeholder="Nickname" autocomplete="off" enterkeyhint="go">
+      </div>
+    </div>
+    <div class="lbl">Pick your character</div>
+    <div class="av-tabs" id="av-tabs"></div>
+    <div class="av-grid" id="av-grid"></div>
+    <div class="col-grid" id="col-grid"></div>
+    <div class="err" id="prof-err"></div>
+    <button class="go big wide" id="btn-prof"></button>
+  </div>
+</section>
+
+<!-- Connecting / messages -->
+<section class="screen center-screen" id="scr-msg" hidden>
+  <div class="msg-box" id="msg-body"></div>
+</section>
+
+<!-- Lobby -->
+<section class="screen" id="scr-lobby" hidden>
+  <div class="lobby">
+    <div class="lobby-head">
+      <button class="ghost small" id="lb-leave">✕ Leave</button>
+      <div class="logo">Doodle<span>Dash</span></div>
+      <span class="net" id="net" hidden></span>
+    </div>
+    <div class="card pin-card">
+      <div class="pin-left">
+        <div class="lbl">Game PIN</div>
+        <div class="pin-code" id="lb-pin">······</div>
+      </div>
+      <div class="pin-right">
+        <button class="primary" id="lb-share">📨 Invite</button>
+        <button class="soft small" id="lb-copy">Copy link</button>
+      </div>
+    </div>
+    <div class="phone-tip" id="lb-phone-tip" hidden>📱 You're hosting on a phone. Keep this page open on screen. If you lock the phone or switch apps, the game pauses for everyone.</div>
+    <div class="lobby-grid">
+      <div class="glass lobby-players">
+        <div class="sec-title"><span id="lb-count">0</span> players <small id="lb-kick-hint"></small></div>
+        <div class="chips" id="lb-players"></div>
+      </div>
+      <div class="glass lobby-settings" id="lb-settings"></div>
+    </div>
+    <div class="lobby-foot" id="lb-foot"></div>
+  </div>
+</section>
+
+<!-- Game -->
+<section class="screen" id="scr-game" hidden>
+  <div class="game">
+    <header class="g-top">
+      <div class="g-round" id="g-round">Round 1/2</div>
+      <div class="g-word" id="g-word"></div>
+      <div class="g-timer" id="g-timer">
+        <svg viewBox="0 0 44 44"><circle class="track" cx="22" cy="22" r="19"/><circle class="bar" id="g-timer-bar" cx="22" cy="22" r="19"/></svg>
+        <span id="g-timer-num"></span>
+      </div>
+    </header>
+    <div class="g-main">
+      <aside class="g-players" id="g-players"></aside>
+      <div class="g-stage">
+        <div class="board-wrap" id="board-wrap">
+          <canvas id="board"></canvas>
+          <div class="board-overlay" id="overlay" hidden></div>
+          <div class="board-flash" id="flash" hidden></div>
+        </div>
+        <div class="tools" id="tools" hidden>
+          <div class="palette" id="palette"></div>
+          <div class="tool-row">
+            <div class="seg" id="modes">
+              <button data-mode="pen" title="Pen">✏️</button><button data-mode="eraser" title="Eraser">🧽</button><button data-mode="fill" title="Fill">🪣</button>
+            </div>
+            <div class="seg" id="sizes"></div>
+            <div class="seg">
+              <button id="t-undo" title="Undo">↶</button><button id="t-clear" title="Clear all">🗑</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="g-chat">
+        <div class="chat-log" id="chat-log"></div>
+        <form class="chat-form" id="chat-form" autocomplete="off">
+          <input type="text" id="chat-in" maxlength="80" placeholder="Type your guess…" enterkeyhint="send" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+          <button class="go" type="submit">Send</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- End -->
+<section class="screen" id="scr-end" hidden>
+  <div class="end">
+    <div class="card end-title">🏆 Final scores</div>
+    <div class="podium" id="podium"></div>
+    <div class="final-list" id="final-list"></div>
+    <div class="end-actions" id="end-actions"></div>
+  </div>
+</section>
+
+<div class="overlay-full" id="reconnect" hidden>
+  <div class="spinner"></div>
+  <div id="reconnect-text">Connection lost. Reconnecting…</div>
+  <button class="ghost small" id="btn-give-up">Leave game</button>
+</div>
+
+<dialog id="dlg">
+  <div id="dlg-body"></div>
+  <div class="dlg-actions"><button class="soft" id="dlg-no">Cancel</button><button class="danger" id="dlg-yes">OK</button></div>
+</dialog>
+
+<script src="js/vendor/peerjs.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/link.js"></script>
+<script src="js/avatars.js"></script>
+<script src="js/common.js"></script>
+<script src="js/words.js"></script>
+<script src="js/board.js"></script>
+<script src="js/host.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

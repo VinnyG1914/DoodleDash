@@ -1,0 +1,11 @@
+Put your own avatar pictures in this folder (.png, .jpg, .webp, .gif or .svg).
+
+1. Copy the pictures in here. The file name does not matter.
+2. Double-click "Update avatars.bat" in the TeamQuiz folder. It shrinks big pictures to 256 px squares
+   and adds them to a "Custom" tab at the front of the avatar picker.
+3. Upload the TeamQuiz folder to Netlify again.
+
+You can also make more tabs: create another folder next to this one (for example avatars\movies),
+put pictures in it and run "Update avatars.bat".
+
+Note: your Netlify link is public, so anyone with the link can see these pictures.
